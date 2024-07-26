@@ -41,7 +41,15 @@ builder.Services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
 
 builder.Services.AddApplicationServices();
 
-builder.Services.AddIdentityServices(builder.Configuration); 
+builder.Services.AddIdentityServices(builder.Configuration);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy", option =>
+    {
+        option.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+    });
+});
 
 var app = builder.Build();
 
@@ -85,6 +93,8 @@ app.UseStatusCodePagesWithReExecute("/errors/{0}");
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+app.UseCors("MyPolicy");
 
 app.MapControllers();
 

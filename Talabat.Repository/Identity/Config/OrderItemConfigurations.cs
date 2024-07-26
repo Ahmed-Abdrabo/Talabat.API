@@ -14,7 +14,10 @@ namespace Talabat.Repository.Identity.Config
         public void Configure(EntityTypeBuilder<OrderItem> builder)
         {
             builder.OwnsOne(O => O.Product, Product => Product.WithOwner());
-
+            builder.HasOne(oi => oi.Order)
+            .WithMany(o => o.Items)
+               .HasForeignKey(oi => oi.OrderId)
+            .OnDelete(DeleteBehavior.SetNull);
             builder.Property(O => O.Price)
                 .HasColumnType("decimal(18, 2)");    
         }
